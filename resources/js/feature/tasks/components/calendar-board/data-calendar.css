@@ -1,0 +1,47 @@
+.rbc-header {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+  padding-bottom: 1rem;
+  color: var(--color-muted-foreground);
+  border-bottom-width: 0;
+}
+.rbc-header + .rbc-header {
+  border-left-width: 0;
+}
+.rbc-button-link {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 400;
+  color: var(--color-muted-foreground);
+}
+.rbc-month-row {
+  min-height: 180px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  min-width: 800px !important;
+}
+:not(.rbc-month-row ~ .rbc-month-row).rbc-month-row {
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+}
+.rbc-month-row:last-of-type {
+  border-bottom-width: 1px;
+  border-bottom-left-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+}
+.rbc-month-view {
+  border-style: none;
+}
+.rbc-date-cell {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding: 0.5rem;
+}
+.rbc-today {
+  background-color: inherit;
+}
+.rbc-off-range-bg {
+  background-color: inherit;
+}
