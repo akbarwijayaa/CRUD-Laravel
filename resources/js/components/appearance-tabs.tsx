@@ -4,9 +4,8 @@ import { LucideIcon, Moon } from 'lucide-react';
 import { HTMLAttributes } from 'react';
 
 export default function AppearanceToggleTab({ className = '', ...props }: HTMLAttributes<HTMLDivElement>) {
-    useAppearance(); // Keep the hook call
+    useAppearance();
 
-    // Only show dark mode option and make it always selected
     const tabs: { value: Appearance; icon: LucideIcon; label: string }[] = [
         { value: 'dark', icon: Moon, label: 'Dark' },
     ];
@@ -16,7 +15,7 @@ export default function AppearanceToggleTab({ className = '', ...props }: HTMLAt
             {tabs.map(({ value, icon: Icon, label }) => (
                 <button
                     key={value}
-                    disabled={true} // Disable the button
+                    disabled={true}
                     className={cn(
                         'flex items-center rounded-md px-3.5 py-1.5 transition-colors cursor-not-allowed',
                         'bg-neutral-900 shadow-xs dark:bg-neutral-700 dark:text-neutral-100', // Always selected style

@@ -5,10 +5,8 @@ import { useWorkspaceId } from "@/feature/workspaces/hooks/use-workspace-id";
 import { cn } from "@/lib/utils";
 import { useCreateProjectModel } from "@/feature/projects/hooks/use-create-projects-model";
 import { ProjectAvatar } from "./project-avatar";
-// import { useProjectId } from "@/feature/projects/hooks/use-project-id";
 
 export default function Projects() {
-  // const projectId = useProjectId(); // TODO: use the useProjectId hook.
   const workspaceId = useWorkspaceId();
   const { open } = useCreateProjectModel();
 

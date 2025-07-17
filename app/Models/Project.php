@@ -32,12 +32,10 @@ class Project extends Model
             return null;
         }
         
-        // If it's already a full URL, return as is
         if (filter_var($value, FILTER_VALIDATE_URL)) {
             return $value;
         }
         
-        // Convert relative path to full URL
         return asset('storage/' . $value);
     }
 

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,8 +50,6 @@ class User extends Authenticatable
 
     public function workspaces(): BelongsToMany
     {
-        // 'workspace_user' adalah nama tabel pivot yang menghubungkan
-        // tabel 'users' dan 'workspaces'. Sesuaikan jika nama tabel Anda berbeda.
         return $this->belongsToMany(Workspace::class, 'workspace_user');
     }
 

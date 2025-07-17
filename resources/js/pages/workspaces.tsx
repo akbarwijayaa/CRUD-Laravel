@@ -5,14 +5,13 @@ import { type Project } from "@/feature/projects/type";
 import { type Workspace } from "@/feature/workspaces/type";
 import { type Task } from "@/feature/tasks/type";
 
-import AuthenticatedLayout from '@/feature/workspaces/layout/workspace-layout'; // Sesuaikan path layout utama
+import AuthenticatedLayout from '@/feature/workspaces/layout/workspace-layout';
 import Analytics from "@/components/analytics/analytics";
 import { MembersList } from "@/components/member/member-list";
 import { ProjectList } from "@/components/projects/project-list";
 import { TasksList } from "@/components/tasks/tasks-list";
 import { useModalContext } from '@/contexts/modal-context';
 
-// Definisikan tipe AnalyticsData di sini atau pindahkan ke file sentral jika perlu
 interface AnalyticsData {
   total_tasks: number;
   total_projects: number;
@@ -37,15 +36,11 @@ interface PageProps {
   members?: { documents: Member[], total: number };
 }
 
-// Component that uses the modal context
 function WorkspaceContent({ workspace, analytics, tasks, projects, members }: PageProps) {
-  // ✅ Use modal context
   const { openTaskModal, openProjectModal } = useModalContext();
-  
   return (
     <>
       <Head title={workspace.name} />
-
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div className="h-full flex flex-col gap-y-4">
@@ -61,7 +56,6 @@ function WorkspaceContent({ workspace, analytics, tasks, projects, members }: Pa
                 overDueTask: 0,
                 overDueTaskDifference: 0,
               }} />
-
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
                   <TasksList
                       data={tasks?.documents?.map(task => ({
@@ -94,7 +88,7 @@ function WorkspaceContent({ workspace, analytics, tasks, projects, members }: Pa
 }
 
 export default function Show({ workspace, analytics, tasks, projects, members }: PageProps) {
-  // Safety check for workspace
+
   if (!workspace) {
     return (
       <AuthenticatedLayout>

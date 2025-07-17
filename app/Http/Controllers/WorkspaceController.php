@@ -17,17 +17,12 @@ class WorkspaceController extends Controller
     {
         $workspaces = Workspace::all();
         
-        // If workspaces exist, redirect to the first one
         $firstWorkspace = $workspaces->first();
         return redirect()->route('workspaces.show', $firstWorkspace);
 
         if ($workspaces->isEmpty() or $workspaces === null or !$firstWorkspace) {
             return redirect()->route('workspaces.create');
         }
-        
-        // If workspaces exist, redirect to the first one
-        // $firstWorkspace = $workspaces->first();
-        // return redirect()->route('workspaces.show', $firstWorkspace);
     }
 
     /**
@@ -62,31 +57,25 @@ public function store(StoreWorkspaceRequest $request)
      */
     public function show(Workspace $workspace)
     {
-        // Get all workspaces for the sidebar
         $allWorkspaces = Workspace::all();
         
-        // Initialize empty collections for missing tables
         $tasks = collect();
         $projects = collect();
         $members = collect();
         
-        // Try to get related data, but handle missing tables gracefully
         try {
             $tasks = $workspace->tasks()->with(['project', 'assignee'])->latest()->get();
         } catch (\Exception $e) {
-            // Tasks table doesn't exist, use empty collection
         }
         
         try {
             $projects = $workspace->projects()->with('owner')->latest()->get();
         } catch (\Exception $e) {
-            // Projects table doesn't exist, use empty collection
         }
         
         try {
             $members = $workspace->members()->get();
         } catch (\Exception $e) {
-            // Members table doesn't exist, use empty collection
         }
 
         $analytics = [
@@ -130,11 +119,10 @@ public function store(StoreWorkspaceRequest $request)
      */
     public function update(Request $request, Workspace $workspace)
     {
-        // Check if request wants JSON (for API calls)
         if ($request->wantsJson()) {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'imageUrl' => 'nullable|file|image|max:1024', // Allow file uploads
+                'imageUrl' => 'nullable|file|image|max:1024',
             ]);
             
             try {
@@ -142,9 +130,7 @@ public function store(StoreWorkspaceRequest $request)
                     'name' => $request->input('name'),
                 ];
                 
-                // Handle image upload
                 if ($request->hasFile('imageUrl')) {
-                    // Delete old image if exists
                     if ($workspace->imageUrl) {
                         $oldImagePath = storage_path('app/public/' . $workspace->imageUrl);
                         if (file_exists($oldImagePath)) {
@@ -158,7 +144,6 @@ public function store(StoreWorkspaceRequest $request)
                 
                 $workspace->update($updateData);
                 
-                // Refresh the workspace to get updated data including accessors
                 $workspace->refresh();
                 
                 return response()->json([
@@ -174,7 +159,6 @@ public function store(StoreWorkspaceRequest $request)
             }
         }
         
-        // For regular form submissions - implement later if needed
         return redirect()->back()->with('error', 'Not implemented for form submissions');
     }
 
@@ -183,31 +167,25 @@ public function store(StoreWorkspaceRequest $request)
      */
     public function settings(Workspace $workspace)
     {
-        // Get all workspaces for the sidebar
         $allWorkspaces = Workspace::all();
         
-        // Initialize empty collections for missing tables
         $tasks = collect();
         $projects = collect();
         $members = collect();
         
-        // Try to get related data, but handle missing tables gracefully
         try {
             $tasks = $workspace->tasks()->with(['project', 'assignee'])->latest()->get();
         } catch (\Exception $e) {
-            // Tasks table doesn't exist, use empty collection
         }
         
         try {
             $projects = $workspace->projects()->with('owner')->latest()->get();
         } catch (\Exception $e) {
-            // Projects table doesn't exist, use empty collection
         }
         
         try {
             $members = $workspace->members()->get();
         } catch (\Exception $e) {
-            // Members table doesn't exist, use empty collection
         }
 
         return Inertia::render('workspaces/settings', [
@@ -228,17 +206,13 @@ public function store(StoreWorkspaceRequest $request)
      */
     public function members(Workspace $workspace)
     {
-        // Initialize empty collections for missing tables
         $members = collect();
         
-        // Try to get related data, but handle missing tables gracefully
         try {
             $members = $workspace->members()->get();
         } catch (\Exception $e) {
-            // Members table doesn't exist, use empty collection
         }
 
-        // Check if request wants JSON (for API calls)
         if (request()->wantsJson()) {
             return response()->json([
                 'data' => [
@@ -248,24 +222,22 @@ public function store(StoreWorkspaceRequest $request)
             ]);
         }
 
-        // Get all workspaces for the sidebar
         $allWorkspaces = Workspace::all();
         
-        // Initialize empty collections for missing tables
+    
         $tasks = collect();
         $projects = collect();
         
-        // Try to get related data, but handle missing tables gracefully
         try {
             $tasks = $workspace->tasks()->with(['project', 'assignee'])->latest()->get();
         } catch (\Exception $e) {
-            // Tasks table doesn't exist, use empty collection
+
         }
         
         try {
             $projects = $workspace->projects()->with('owner')->latest()->get();
         } catch (\Exception $e) {
-            // Projects table doesn't exist, use empty collection
+
         }
 
         return Inertia::render('workspaces/members', [
@@ -326,12 +298,10 @@ public function store(StoreWorkspaceRequest $request)
      */
     public function showJoinPage(Workspace $workspace, string $inviteCode)
     {
-        // Verify invite code
         if ($workspace->invite_code !== $inviteCode) {
             abort(404, 'Invalid invite code');
         }
         
-        // Check if user is already a member
         if ($workspace->members()->where('user_id', auth()->id())->exists()) {
             return redirect()->route('workspaces.show', $workspace)
                 ->with('info', 'You are already a member of this workspace.');
@@ -354,7 +324,6 @@ public function store(StoreWorkspaceRequest $request)
         
         $inviteCode = $request->input('inviteCode');
         
-        // Verify invite code
         if ($workspace->invite_code !== $inviteCode) {
             if ($request->wantsJson()) {
                 return response()->json([
@@ -365,7 +334,6 @@ public function store(StoreWorkspaceRequest $request)
             return redirect()->back()->withErrors(['inviteCode' => 'Invalid invite code']);
         }
         
-        // Check if user is already a member
         if ($workspace->members()->where('user_id', auth()->id())->exists()) {
             if ($request->wantsJson()) {
                 return response()->json([
@@ -377,7 +345,6 @@ public function store(StoreWorkspaceRequest $request)
                 ->with('info', 'You are already a member of this workspace.');
         }
         
-        // Add user to workspace
         $workspace->members()->attach(auth()->id());
         
         if ($request->wantsJson()) {
@@ -397,9 +364,6 @@ public function store(StoreWorkspaceRequest $request)
      */
     public function destroy(Workspace $workspace)
     {
-        // Check if user is a member of this workspace
-        // For now, we'll allow any authenticated user to delete workspaces
-        // In a production environment, you might want to add more strict permission checks
         if (!auth()->check()) {
             return response()->json([
                 'success' => false,
@@ -407,10 +371,9 @@ public function store(StoreWorkspaceRequest $request)
             ], 403);
         }
         
-        // Check if request wants JSON (for API calls)
         if (request()->wantsJson()) {
             try {
-                // Delete associated image if it exists
+    
                 if ($workspace->imageUrl) {
                     $imagePath = storage_path('app/public/' . $workspace->imageUrl);
                     if (file_exists($imagePath)) {
@@ -418,10 +381,10 @@ public function store(StoreWorkspaceRequest $request)
                     }
                 }
                 
-                // Delete the workspace (this will cascade delete related records)
+    
                 $workspace->delete();
                 
-                // Check if this was the last workspace
+    
                 $remainingWorkspaces = Workspace::count();
                 
                 return response()->json([
@@ -437,9 +400,8 @@ public function store(StoreWorkspaceRequest $request)
             }
         }
         
-        // For regular form submissions
         try {
-            // Delete associated image if it exists
+
             if ($workspace->imageUrl) {
                 $imagePath = storage_path('app/public/' . $workspace->imageUrl);
                 if (file_exists($imagePath)) {
@@ -447,7 +409,7 @@ public function store(StoreWorkspaceRequest $request)
                 }
             }
             
-            // Delete the workspace
+
             $workspace->delete();
             
             return redirect()->route('workspaces')->with('success', 'Workspace deleted successfully!');

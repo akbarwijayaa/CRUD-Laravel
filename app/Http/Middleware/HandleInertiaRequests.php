@@ -18,7 +18,6 @@ class HandleInertiaRequests extends Middleware
 
     public function share(Request $request): array
     {
-        // Ambil data user, jika ada
         $user = $request->user();
 
         return array_merge(parent::share($request), [
@@ -29,9 +28,7 @@ class HandleInertiaRequests extends Middleware
                     'email' => $user->email,
                 ] : null,
             ],
-            // ✅ Data workspace dipindahkan ke level atas, tidak di dalam 'auth'
             'workspaces' => [
-                // ✅ Query dibuat lebih ringan, hanya ambil id dan nama untuk dropdown
                 'all' => $user ? $user->workspaces()->select('workspaces.id', 'workspaces.name')->get() : [],
                 'current' => $user ? $user->currentWorkspace : null,
                 ],

@@ -11,13 +11,10 @@ use Inertia\Inertia;
 
 class TaskController extends Controller
 {
-    // Method ini akan menangani route seperti `workspaces/{workspace}/tasks`
     public function index(Request $request, Workspace $workspace)
     {
-        // ✅ Representasi dari `queryFn`
         $tasks = Task::where('workspace_id', $workspace->id)
-            ->with('project', 'assignee') // Eager load relasi
-            // ✅ Representasi dari parameter filter
+            ->with('project', 'assignee')
             ->when($request->query('search'), function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%");
             })
@@ -27,20 +24,15 @@ class TaskController extends Controller
             ->when($request->query('projectId'), function ($query, $projectId) {
                 $query->where('project_id', $projectId);
             })
-            // ...filter lainnya
             ->latest()
             ->paginate(15)
-            ->withQueryString(); // Agar parameter filter tetap ada di URL paginasi
+            ->withQueryString();
 
-        // Get all workspaces for the sidebar
         $allWorkspaces = Workspace::all();
-        
-        // Get projects for the current workspace
         $projects = $workspace->projects()->with('owner')->latest()->get();
         
         return Inertia::render('tasks/index', [
             'tasks' => $tasks,
-            // Kirim kembali nilai filter untuk sinkronisasi dengan form di frontend
             'filters' => $request->only(['search', 'status', 'projectId']),
             'workspace' => $workspace,
             'workspaces' => [
@@ -77,7 +69,6 @@ class TaskController extends Controller
             'due_date' => $validatedData['dueDate'] ?? null,
         ]);
 
-        // Return JSON response for API calls
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
@@ -102,14 +93,12 @@ class TaskController extends Controller
      */
     public function bulkUpdate(Request $request)
     {
-        // Validate the basic structure
         $request->validate([
             'tasks' => 'required|array',
             'tasks.*.status' => 'required|string|in:backlog,todo,in_progress,in_review,done',
             'tasks.*.position' => 'required|integer',
         ]);
         
-        // Custom validation for $id since Laravel doesn't handle $ in keys well
         foreach ($request->input('tasks', []) as $index => $task) {
             if (!isset($task['$id']) || empty($task['$id'])) {
                 return response()->json([
@@ -118,7 +107,6 @@ class TaskController extends Controller
                 ], 422);
             }
             
-            // Validate that $id is a valid integer
             if (!is_numeric($task['$id'])) {
                 return response()->json([
                     'success' => false,
@@ -131,12 +119,10 @@ class TaskController extends Controller
 
         try {
             foreach ($tasks as $taskData) {
-                // Check if $id exists in the task data
                 if (!isset($taskData['$id'])) {
                     continue;
                 }
                 
-                // Convert $id to integer since it comes as string from frontend
                 $taskId = intval($taskData['$id']);
                 
                 $task = Task::find($taskId);

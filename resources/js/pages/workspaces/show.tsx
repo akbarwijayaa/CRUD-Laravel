@@ -1,4 +1,4 @@
-import { useState } from 'react'; // ✅ 1. Import useState untuk mengelola modal
+import { useState } from 'react';
 import { Head } from '@inertiajs/react';
 
 import { type Member } from "@/feature/members/types/type";
@@ -6,15 +6,14 @@ import { type Project } from "@/feature/projects/type";
 import { type Workspace } from "@/feature/workspaces/type";
 import { type Task } from "@/feature/tasks/type";
 
-import AuthenticatedLayout from '@/feature/workspaces/layout/workspace-layout'; // Sesuaikan path layout utama
+import AuthenticatedLayout from '@/feature/workspaces/layout/workspace-layout';
 import Analytics from "@/components/analytics/analytics";
 import { MembersList } from "@/components/member/member-list";
 import { ProjectList } from "@/components/projects/project-list";
 import { TasksList } from "@/components/tasks/tasks-list";
-import { CreateTaskModel } from '@/feature/tasks/components/create-task-model'; // Asumsi Anda punya komponen ini
-import { CreateProjectModel } from '@/feature/projects/components/create-project-model'; // Asumsi Anda punya komponen ini
+import { CreateTaskModel } from '@/feature/tasks/components/create-task-model';
+import { CreateProjectModel } from '@/feature/projects/components/create-project-model';
 
-// Definisikan tipe AnalyticsData di sini atau pindahkan ke file sentral jika perlu
 interface AnalyticsData {
   total_tasks: number;
   total_projects: number;
@@ -40,7 +39,6 @@ interface PageProps {
 }
 
 export default function Show({ workspace, analytics, tasks, projects, members }: PageProps) {
-  // ✅ 3. Definisikan state untuk mengontrol visibilitas modal
   const [, setIsTaskModalOpen] = useState(false);
   const [, setIsProjectModalOpen] = useState(false);
   

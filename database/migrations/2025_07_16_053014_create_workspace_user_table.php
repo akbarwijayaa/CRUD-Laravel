@@ -13,13 +13,8 @@ return new class extends Migration
     {
         Schema::create('workspace_user', function (Blueprint $table) {
             $table->id();
-
-            // Kolom untuk foreign key ke tabel users
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            
-            // Kolom untuk foreign key ke tabel workspaces
             $table->foreignId('workspace_id')->constrained()->onDelete('cascade');
-
             $table->timestamps();
         });
     }

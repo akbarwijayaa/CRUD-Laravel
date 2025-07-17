@@ -39,38 +39,23 @@ const handleSystemThemeChange = () => {
 };
 
 export function initializeTheme() {
-    // Force dark mode only
     applyTheme('dark');
-    
-    // Store dark mode in localStorage
     localStorage.setItem('appearance', 'dark');
-    
-    // Store in cookie for SSR
     setCookie('appearance', 'dark');
     
-    // No need for system theme change listener since we're forcing dark mode
 }
 
 export function useAppearance() {
     const [appearance, setAppearance] = useState<Appearance>('dark');
-
     const updateAppearance = useCallback(() => {
-        // Force dark mode only - ignore any attempts to change theme
         setAppearance('dark');
-
-        // Store dark mode in localStorage
         localStorage.setItem('appearance', 'dark');
-
-        // Store in cookie for SSR
         setCookie('appearance', 'dark');
-
         applyTheme('dark');
     }, []);
 
     useEffect(() => {
-        // Always force dark mode
         updateAppearance();
-
         return () => mediaQuery()?.removeEventListener('change', handleSystemThemeChange);
     }, [updateAppearance]);
 

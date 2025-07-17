@@ -1,11 +1,10 @@
-import { Link } from "@inertiajs/react"; // ✅ Gunakan Link dari Inertia
+import { Link } from "@inertiajs/react";
 import { Button } from "../ui/button";
 import DottedSeparatoo from "../dotted-separator";
 import { Card, CardContent } from "../ui/card";
 import { Member } from "@/feature/members/types/type";
 import MemberAvatar from "@/feature/members/components/member-avatar";
 
-// ✅ Definisikan interface props yang baru
 interface MembersListProps {
   data: Member[];
   total: number;
@@ -13,9 +12,6 @@ interface MembersListProps {
 }
 
 export function MembersList({ data, total, workspaceId }: MembersListProps) {
-  // ❌ Hapus hook useWorkspaceId
-
-  // Handle empty or null data
   const members = data || [];
   const memberTotal = total || 0;
 
@@ -28,7 +24,7 @@ export function MembersList({ data, total, workspaceId }: MembersListProps) {
         <DottedSeparatoo className="my-4" />
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {members.map((member) => (
-            <li key={member.id}> {/* ✅ Gunakan id bukan $id */}
+            <li key={member.id}>
               <Card className="shadow-none border-none rounded-lg overflow-hidden">
                 <CardContent className="p-4 flex flex-col items-center gap-y-2 text-center">
                   <MemberAvatar
@@ -54,7 +50,6 @@ export function MembersList({ data, total, workspaceId }: MembersListProps) {
              </li>
           )}
         </ul>
-        {/* ✅ Gunakan prop `asChild` agar Button bisa berfungsi sebagai Link */}
         <Button variant={"ghost"} className="mt-4 w-full" asChild>
           <Link href={route('members.index', { workspace: workspaceId })}>Tampilkan Semua</Link>
         </Button>

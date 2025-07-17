@@ -61,18 +61,13 @@ class ProjectController extends Controller
      */
     public function show(Workspace $workspace, Project $project)
     {
-        // Get all workspaces for the sidebar
         $allWorkspaces = Workspace::all();
-        
-        // Get projects for the current workspace
         $projects = $workspace->projects()->with('owner')->latest()->get();
         
-        // Get tasks for this project
         $tasks = collect();
         try {
             $tasks = $project->tasks()->with(['assignee', 'project'])->latest()->get();
         } catch (\Exception $e) {
-            // Tasks table doesn't exist, use empty collection
         }
         
         return \Inertia\Inertia::render('projects/show', [

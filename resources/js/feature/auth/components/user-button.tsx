@@ -4,12 +4,10 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem, // Gunakan DropdownMenuItem dari shadcn
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import DottedSeparatoo from "@/components/dotted-separator";
-
-// ✅ Ganti custom hooks dengan usePage dan Link dari Inertia
 import { usePage, Link } from "@inertiajs/react";
 
 interface User {
@@ -22,13 +20,12 @@ interface AuthProps {
 }
 
 export const UserButton = () => {
-  // Ambil data user dari props global yang dibagikan oleh Laravel
-  const { auth } = usePage().props;
-  const user = (auth as AuthProps).user; // user akan berisi data atau null
 
-  // state `isLoading` tidak lagi diperlukan karena data sudah tersedia saat halaman dimuat
+  const { auth } = usePage().props;
+  const user = (auth as AuthProps).user;
+
   if (!user) {
-    // Jika tidak ada user (misal di halaman login), jangan tampilkan apa-apa
+  
     return null;
   }
 
@@ -47,7 +44,6 @@ export const UserButton = () => {
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-
       <DropdownMenuContent
         align="end"
         side="bottom"
@@ -66,13 +62,11 @@ export const UserButton = () => {
           </div>
         </div>
         <DottedSeparatoo className="mb-1" />
-
-        {/* ✅ Gunakan <Link> dari Inertia untuk logout */}
         <DropdownMenuItem asChild>
           <Link
-            href={route("logout")} // Arahkan ke route logout Laravel
-            method="post" // Penting: logout harus menggunakan method POST
-            as="button" // Render sebagai button agar fungsionalitas dropdown tidak rusak
+            href={route("logout")}
+            method="post"
+            as="button"
             className="w-full flex items-center justify-center text-base py-2 text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors duration-75 font-medium cursor-pointer"
           >
             <LogOut className="size-4 mr-2" />

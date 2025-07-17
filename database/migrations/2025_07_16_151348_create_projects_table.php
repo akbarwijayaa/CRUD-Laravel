@@ -19,7 +19,6 @@ return new class extends Migration
             $table->unsignedBigInteger('workspace_id');
             $table->timestamps();
             
-            // Add foreign key constraints
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('cascade');
         });

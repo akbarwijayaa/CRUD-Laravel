@@ -24,7 +24,6 @@ return new class extends Migration
             $table->integer('position')->default(0);
             $table->timestamps();
             
-            // Add foreign key constraints
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->foreign('workspace_id')->references('id')->on('workspaces')->onDelete('cascade');
             $table->foreign('assignee_id')->references('id')->on('users')->onDelete('set null');

@@ -16,12 +16,10 @@ class EnsureWorkspaceExists
      */
     public function handle(Request $request, Closure $next)
     {
-        // Skip for create workspace routes
         if ($request->routeIs('workspaces.create') || $request->routeIs('workspaces.store')) {
             return $next($request);
         }
         
-        // Check if any workspaces exist
         if (Workspace::count() === 0) {
             return redirect()->route('workspaces.create');
         }

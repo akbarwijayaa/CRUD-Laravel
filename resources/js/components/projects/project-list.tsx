@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react"; // ✅ Gunakan Link dari Inertia
+import { Link } from "@inertiajs/react";
 import { PlusIcon } from "lucide-react";
 import { Project } from "@/feature/projects/type";
 import { Button } from "../ui/button";
@@ -6,18 +6,15 @@ import DottedSeparatoo from "../dotted-separator";
 import { Card, CardContent } from "../ui/card";
 import { ProjectAvatar } from "./project-avatar";
 
-// ✅ Definisikan interface props yang baru
 interface ProjectListProps {
   data: Project[];
   total: number;
   workspaceId: number | string;
-  onCreateProject: () => void; // Fungsi untuk membuka modal create project
+  onCreateProject: () => void;
 }
 
 export function ProjectList({ data, total, workspaceId, onCreateProject }: ProjectListProps) {
-  // ❌ Hapus hooks useWorkspaceId dan useCreateProjectModel
 
-  // Handle empty or null data
   const projects = data || [];
   const projectTotal = total || 0;
 
@@ -26,15 +23,14 @@ export function ProjectList({ data, total, workspaceId, onCreateProject }: Proje
       <div className="bg-neutral-900 border rounded-lg p-4">
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Proyek ({projectTotal})</p>
-          <Button variant={"secondary"} size={"icon"} onClick={onCreateProject}> {/* ✅ Panggil dari props */}
+          <Button variant={"secondary"} size={"icon"} onClick={onCreateProject}>
             <PlusIcon className="size-4 text-neutral-400 hover:text-neutral-600" />
           </Button>
         </div>
         <DottedSeparatoo className="my-4" />
         <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {projects.map((project) => (
-            <li key={project.id}> {/* ✅ Gunakan id bukan $id */}
-              {/* ✅ Gunakan Link dari Inertia dan route helper */}
+            <li key={project.id}>
               <Link href={route('projects.show', { workspace: workspaceId, project: project.id })}>
                 <Card className="shadow-none border rounded-lg hover:opacity-75 transition">
                   <CardContent className="p-4 flex items-center gap-x-2.5">
@@ -59,7 +55,6 @@ export function ProjectList({ data, total, workspaceId, onCreateProject }: Proje
           )}
         </ul>
         <Button variant={"ghost"} className="mt-4 w-full" asChild>
-           {/* ✅ Implementasi tombol Show All menggunakan Link dan route */}
           <Link href={route('projects.index', { workspace: workspaceId })}>Tampilkan Semua</Link>
         </Button>
       </div>
